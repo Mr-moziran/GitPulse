@@ -21,6 +21,40 @@ plt.style.use('ggplot')  # 使用更好看的绘图风格
 
 
 class RepoVisualizer:
+    def __init__(self, data_path, output_dir):
+        self.data_path = data_path
+        self.output_dir = output_dir
+
+    def run_all(self):
+        print(f"[Visualizer] 正在读取数据: {self.data_path} ...")
+
+        if not os.path.exists(self.data_path):
+            raise FileNotFoundError("数据文件不存在，请先运行 Miner!")
+
+        df = pd.read_csv(self.data_path)
+        df['date'] = pd.to_datetime(df['date'])
+
+        os.makedirs(self.output_dir, exist_ok=True)
+
+        print("[Visualizer] 正在生成分析图表...")
+
+        # 1. 基础活跃度分析
+        self.plot_monthly_activity(df)
+
+        # 2. 贡献者分析 (按提交次数 + 按代码行数)
+        self.plot_top_contributors_by_commits(df)
+        self.plot_top_contributors_by_lines(df)
+
+        # 3. 代码演化分析 (月度变动 + 总规模增长)
+        self.plot_code_churn(df)
+        self.plot_loc_growth(df)
+
+        # 4. Bug/文本分析 (Bug修复趋势 + 词云)
+        self.plot_bug_fix_trend(df)
+        self.plot_message_wordcloud(df)
+
+        print(f"[Visualizer] 所有图表已生成至: {self.output_dir}")
+
     def plot_monthly_activity(self, df):
         """图表1: 每月提交活跃度 (折线图)"""
         monthly = df.set_index('date').resample('M').size()
