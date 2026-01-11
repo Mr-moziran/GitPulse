@@ -18,3 +18,19 @@ else:
 
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示为方块的问题
 plt.style.use('ggplot')  # 使用更好看的绘图风格
+
+
+class RepoVisualizer:
+    def plot_monthly_activity(self, df):
+        """图表1: 每月提交活跃度 (折线图)"""
+        monthly = df.set_index('date').resample('M').size()
+
+        plt.figure(figsize=(12, 5))
+        monthly.plot(kind='line', marker='o', color='green', linewidth=2)
+        plt.title('项目提交活跃度趋势 (Commit Activity)')
+        plt.ylabel('提交次数')
+        plt.grid(True, linestyle='--', alpha=0.6)
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, "1_activity_trend.png"))
+        plt.close()
+
