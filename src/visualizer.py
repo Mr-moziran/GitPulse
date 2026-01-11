@@ -34,3 +34,16 @@ class RepoVisualizer:
         plt.savefig(os.path.join(self.output_dir, "1_activity_trend.png"))
         plt.close()
 
+    def plot_top_contributors_by_commits(self, df):
+        """图表2: Top 10 贡献者 - 按提交次数 (柱状图)"""
+        top = df['author'].value_counts().head(10)
+
+        plt.figure(figsize=(10, 6))
+        top.plot(kind='bar', color='steelblue', alpha=0.8)
+        plt.title('Top 10 贡献者 (按提交次数)')
+        plt.ylabel('Commit Count')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, "2_top_contributors_commits.png"))
+        plt.close()
+
