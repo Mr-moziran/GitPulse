@@ -121,3 +121,29 @@ class RepoVisualizer:
             plt.close()
         else:
             print("[Visualizer] 未检测到 Bug 修复相关的提交，跳过 Bug 趋势图。")
+
+    def plot_message_wordcloud(self, df):
+        """图表7: Commit Message 词云"""
+        print("[Visualizer] 正在生成词云...")
+        text = " ".join(str(m) for m in df['message'])
+
+        # 停用词 (根据 GPT-SoVITS 的实际情况添加)
+        stopwords = {
+            'Merge', 'branch', 'pull', 'request', 'to', 'the', 'of', 'in', 'and', 'for',
+            'update', 'feat', 'fix', 'master', 'main', 'remote', 'origin', 'readme'
+        }
+
+        # 尝试自动寻找 Windows 字体，如果是 Mac/Linux 也会尝试适配
+        font_path = "C:/Windows/Fonts/simhei.ttf" if platform.system() == "Windows" else None
+
+        try:
+            # 如果是 Mac，font_path 可能是 None，WordCloud 会尝试默认字体，
+            wc = WordCloud(
+                width=1000, height=600,
+                background_color='white',
+                stopwords=stopwords,
+                font_path=font_path
+            ).generate(text)
+            wc.to_file(os.path.join(self.output_dir, "7_wordcloud.png"))
+        except Exception as e:
+            print(f"[Visualizer] 词云生成警告: {e}")
