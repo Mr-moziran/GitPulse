@@ -47,3 +47,17 @@ class RepoVisualizer:
         plt.savefig(os.path.join(self.output_dir, "2_top_contributors_commits.png"))
         plt.close()
 
+    def plot_top_contributors_by_lines(self, df):
+        """图表3: Top 10 贡献者 - 按代码修改行数 (柱状图)"""
+        # 计算每个人的总工作量 (新增行数 + 删除行数)
+        df['total_changes'] = df['insertions'] + df['deletions']
+        top_lines = df.groupby('author')['total_changes'].sum().sort_values(ascending=False).head(10)
+
+        plt.figure(figsize=(10, 6))
+        top_lines.plot(kind='bar', color='orange', alpha=0.8)
+        plt.title('Top 10 贡献者 (按代码变动行数)')
+        plt.ylabel('Total Lines Changed (Add + Del)')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, "3_top_contributors_lines.png"))
+        plt.close()
