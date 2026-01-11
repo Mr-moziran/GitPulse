@@ -13,7 +13,7 @@ elif sys_str == 'Darwin':
     # Mac 常用中文字体
     plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'PingFang SC']
 else:
-    # Linux 默认字体 (可能需要根据具体环境调整)
+    # Linux 默认字体
     plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示为方块的问题
