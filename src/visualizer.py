@@ -61,3 +61,17 @@ class RepoVisualizer:
         plt.tight_layout()
         plt.savefig(os.path.join(self.output_dir, "3_top_contributors_lines.png"))
         plt.close()
+
+    def plot_code_churn(self, df):
+        """图表4: 每月代码增删规模 (折线图)"""
+        churn = df.set_index('date').resample('M')[['insertions', 'deletions']].sum()
+
+        plt.figure(figsize=(12, 5))
+        plt.plot(churn.index, churn['insertions'], label='新增代码 (Add)', color='blue', alpha=0.6)
+        plt.plot(churn.index, churn['deletions'], label='删除代码 (Del)', color='red', alpha=0.6)
+        plt.title('每月代码变动规模 (Code Churn)')
+        plt.ylabel('行数')
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, "4_code_churn.png"))
+        plt.close()
