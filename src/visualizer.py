@@ -75,3 +75,24 @@ class RepoVisualizer:
         plt.tight_layout()
         plt.savefig(os.path.join(self.output_dir, "4_code_churn.png"))
         plt.close()
+
+    def plot_loc_growth(self, df):
+        """图表5: 项目总代码行数增长趋势 (面积图)"""
+        # 估算 LOC 增长：新增 - 删除
+        df['net_growth'] = df['insertions'] - df['deletions']
+        # 按时间排序并计算累积和 (Cumulative Sum)
+        df_sorted = df.sort_values('date')
+        df_sorted['total_loc'] = df_sorted['net_growth'].cumsum()
+
+        # 按天重采样，取当天的最后值，使曲线平滑
+        daily_loc = df_sorted.set_index('date')['total_loc'].resample('D').ffill()
+
+        plt.figure(figsize=(12, 5))
+        daily_loc.plot(kind='area', color='purple', alpha=0.3)
+        plt.plot(daily_loc.index, daily_loc, color='purple')
+        plt.title('项目代码规模增长趋势 (Total LOC Growth)')
+        plt.ylabel('累计估算行数')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, "5_loc_growth.png"))
+        plt.close()
