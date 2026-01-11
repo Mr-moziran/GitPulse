@@ -96,3 +96,28 @@ class RepoVisualizer:
         plt.tight_layout()
         plt.savefig(os.path.join(self.output_dir, "5_loc_growth.png"))
         plt.close()
+
+    def plot_bug_fix_trend(self, df):
+        """图表6: Bug 修复趋势分析 (已修复日期显示Bug)"""
+        # 1. 筛选关键词 (中英文混合)
+        keywords = ['fix', 'bug', 'issue', 'crash', 'error', 'solve', '修复', '解决', '问题', '报错']
+        pattern = '|'.join(keywords)
+        bug_commits = df[df['message'].str.lower().str.contains(pattern, na=False)]
+
+        if len(bug_commits) > 0:
+            # 2. 按月统计数量
+            bug_trend = bug_commits.set_index('date').resample('M').size()
+            bug_trend.index = bug_trend.index.strftime('%Y-%m')
+
+            plt.figure(figsize=(12, 5))
+            bug_trend.plot(kind='bar', color='brown', width=0.8, alpha=0.8)
+            plt.title('Bug 修复频率 (Bug Fix Frequency)')
+            plt.ylabel('修复提交数量 (Commits)')
+            plt.xlabel('月份')
+            # 旋转 X 轴标签防止重叠
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.savefig(os.path.join(self.output_dir, "6_bug_fix_trend.png"))
+            plt.close()
+        else:
+            print("[Visualizer] 未检测到 Bug 修复相关的提交，跳过 Bug 趋势图。")
