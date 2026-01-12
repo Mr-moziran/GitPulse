@@ -32,7 +32,11 @@ class TestVisualizer(unittest.TestCase):
 
     def test_images_generated(self):  # 第二个测试方法
         """测试核心图表是否生成"""
-
+        self.viz.run_all()
+        # 检查是否生成了特定的图片
+        expected_files = ["top_contributors.png", "activity_trend.png"]
+        for f in expected_files:
+            self.assertTrue(os.path.exists(os.path.join(self.out_dir, f)))
 
     def tearDown(self):
         """清理方法"""
