@@ -24,7 +24,11 @@ class TestVisualizer(unittest.TestCase):
 
     def test_output_directory_creation(self): # 第一个测试方法
         """测试是否会自动创建输出目录"""
+        if os.path.exists(self.out_dir):
+            shutil.rmtree(self.out_dir)
 
+        self.viz.run_all()
+        self.assertTrue(os.path.exists(self.out_dir))
 
     def test_images_generated(self):  # 第二个测试方法
         """测试核心图表是否生成"""
